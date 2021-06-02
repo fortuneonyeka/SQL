@@ -313,3 +313,49 @@ SELECT name, continent FROM world x
     ALL(SELECT population FROM world y
       WHERE y.continent = x.continent
         AND x.name != y.name) 
+
+--nested select Quiz
+-- 1
+SELECT region, name, population FROM bbc x WHERE population <= ALL (SELECT population FROM bbc y WHERE y.region=x.region AND population>0)
+-- 2
+SELECT name,region,population FROM bbc x WHERE 50000 < ALL (SELECT population FROM bbc y WHERE x.region=y.region AND y.population>0)
+-- 3
+SELECT name, region FROM bbc x
+ WHERE population < ALL (SELECT population/3 FROM bbc y WHERE y.region = x.region AND y.name != x.name)
+-- 4
+-- Table-D
+France
+Germany
+Russia
+Turkey
+-- 5
+SELECT name FROM bbc
+ WHERE gdp > (SELECT MAX(gdp) FROM bbc WHERE region = 'Africa')
+-- 6
+SELECT name FROM bbc
+ WHERE population < (SELECT population FROM bbc WHERE name='Russia')
+   AND population > (SELECT population FROM bbc WHERE name='Denmark')
+-- 7
+--Table-B
+Bangladesh
+India
+Pakistan
+
+--SUM and COUNT
+-- 1
+SELECT SUM(population)
+FROM world
+-- 2
+SELECT DISTINCT continent FROM world
+-- 3
+SELECT SUM(gdp) FROM world WHERE continent = 'Africa'
+-- 4
+SELECT COUNT(name) FROM world WHERE area >= 1000000
+-- 5
+SELECT SUM(population) FROM world WHERE name IN ('Estonia', 'Latvia', 'Lithuania')
+-- 6
+SELECT continent, COUNT(name) AS number_of_countries FROM world GROUP BY continent
+-- 7
+SELECT continent, COUNT(name) FROM world WHERE population >= 10000000 GROUP BY continent
+-- 8
+SELECT continent FROM world GROUP BY continent HAVING SUM(population) > 100000000
